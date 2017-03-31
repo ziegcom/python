@@ -9,11 +9,11 @@ from Engine  import Engine
 import sys
 
 def main():
-    # instantiate a 20x20 grid
-    board = Board(20)
+    # instantiate a square board
+    board = Board(30)
 
     # scatter some random obstacles about the board    
-    board.createObstacles(8, 8)
+    board.createObstacles(10, 10)
 
     # instantiate a monster
     m1 = Monster(speed = 2,
@@ -33,12 +33,16 @@ def main():
                            "entrails.")
 
     m2 = Monster(name = "mouse", 
+                 char = "m",
+                 aggression = 1,
                  nearMsg = "You hear a squeaking down near the ground.", 
                  winMsg  = "You clumsily step on the mouse's tail, causing it to stiffen in fright and feign death until you go away.",
                  scoreValue = 2)
 
     m3 = Monster(name = "Cave-Bat", 
+                 char = "C",
                  aggression = 1,
+                 speed   = 3,
                  medMsg  = "You hear a distant fluttering as of torn canvas sails.",
                  nearMsg = "You hear a nearly infra-sonic screeching high above, and taste the rancid spoor of hot demon breath.",
                  winMsg  = "With a leap you tear the Cave-Bat from the air, wrenching it to earth and crushing its withered wings.",
@@ -69,12 +73,12 @@ def main():
                   takeMsg = "Heaven knows what you plan to do with it, but you carefully nestle the mottled fungoid into your bag.")
 
     thing3 = Item(name = "rock resembling Donald Trump's hairpiece",
-                  pattern = "rock|trump|hair",
+                  pattern = "rock|stone|trump|hair|toupee",
                   weight = 10,
                   cost = 1,
                   scoreValue = 15,
                   lookMsg = "You see a curious-looking rock that looks like nothing so much as Donald Trump's disembodied hairpiece.",
-                  takeMsg = "You distractedly drop the rock into your bag, hoping beyond hope for the chance to return it...with vigor.")
+                  takeMsg = "You distractedly drop the rock into your bag, hoping for the chance to someday return it.")
 
     board.addItem(thing1)
     board.addItem(thing2)
@@ -86,7 +90,8 @@ def main():
     # place player somewhere on the board
     board.addPlayer(player)
 
-    board.dump(label="Debugging", admin=True)
+    if __debug__:
+        board.dump(label="Debugging", admin=True)
 
     # start a game session
     engine = Engine(board, player)

@@ -59,7 +59,7 @@ class Engine:
             return self.doSleep()
 
         # debug
-        if re.search("debug", cmd):
+        if re.search("debug", cmd) and __debug__:
             return self.doDebug()
 
         # quit
@@ -69,11 +69,11 @@ class Engine:
         # todo: drop/discard, attack/kill/slay, open, use, ...
 
         # otherwise
-        print "I don't know how to %s." % cmd
+        print "I don't know how to %s.\n" % cmd
 
         self.confusion += 1
         if self.confusion > 2:
-            doHelp()
+            self.doHelp()
             self.confusion = 0
 
     def proximityCheck(self):
@@ -98,7 +98,7 @@ class Engine:
         for item in self.player.inventory:
             self.player.score += item.scoreValue
 
-        print msg
+        print '\n' + msg
         print "You have a score of %d points." % self.player.score
         self.gameOver = True
 
@@ -120,10 +120,11 @@ class Engine:
               "From the slowly-cooling pile of damp excreta in which you just stepped, "
               "you take it that you are not alone in this inpenetrable and sound-devouring "
               "darkness.\n")
+        print ("You can go %s.\n" % self.board.listAvailableDirections(self.player.pos))
 
     def doMove(self, direction):
         pos = self.player.pos
-        longDir = self.expandDirection(direction)
+        longDir = self.board.expandDirection(direction)
 
         if not self.board.canMove(pos, direction):
             print "The cavern wall prevents you from moving %s." % longDir
@@ -180,7 +181,9 @@ class Engine:
             self.board.showTrail()
 
     def doSleep(self):
-        print "Time passes..."
+        print random.choice(["Time passes...", 
+                             "You pause to contemplate the cruel impermanence of human existence.",
+                             "Espying a passably pillow-shaped rock, you settle down for an impromptu siesta."])
 
     def doHelp(self):
         print("I am but a feeble Python AI, but I understand a few basic constructs.\n"
@@ -200,13 +203,3 @@ class Engine:
     #                                                                          #
     ############################################################################
 
-    def expandDirection(self, direction):
-        if direction == "e":
-            return "east"
-        elif direction == "w":
-            return "west"
-        elif direction == "n":
-            return "north"
-        elif direction == "s":
-            return "south"
-        raise Exception("unknown direction: %s" % direction)

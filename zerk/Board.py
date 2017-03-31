@@ -1,14 +1,24 @@
 from Position import Position
+import Util
 
 import sys
 import random
 from random import shuffle
-from termcolor import colored
 
+################################################################################
+# Version compatibility BS
+################################################################################
+
+try:
+    from termcolor import colored
+except ImportError:
+    def colored(c, shade):
+        return c
+
+################################################################################
+# Represent an N x N playing board with obstacles, monsters, items and a player.
+################################################################################
 class Board:
-    """
-    An N x N square matrix
-    """
 
     def __init__(self, size):
         self.size = size
@@ -89,16 +99,16 @@ class Board:
 
                 # consider up to 'aggression' possible moves from this spot, 
                 # looking for one that will move toward the hapless player
-                for check in range (0, m.aggression):
+                for check in range (m.aggression + 1):
                     newPos = self.randomAdjacentUnoccupiedPos(m.pos)
                     if newPos is not None:
-                        if (newPos.dist(self.player.pos) < dist) or (check == m.aggression):
+                        if (newPos.dist(self.player.pos) < dist) or (check >= m.aggression):
                             m.pos = newPos
                             break
             
             # increase entropy when Baby is stuck in a corner
             if origPos == m.pos:
-                m.aggression -= 1
+                m.aggression = max(0, m.aggression - 1)
             else:
                 m.aggression = min(m.origAggression, m.aggression + 1)
 
@@ -124,15 +134,33 @@ class Board:
         return pos
 
     def randomAdjacentUnoccupiedPos(self, pos):
-        directions = ["n", "s", "e", "w"]
+        directions = ["n", "e", "s", "w"]
         shuffle(directions)
         for direction in directions:
             if (self.canMove(pos, direction)):
                 p2 = self.adjacentPos(pos, direction)
                 if not self.occupied(p2):
                     return p2
-        # just return null
-        # raise Exception("there are no adjacent unoccupied positions from %s" % pos)
+        return None
+
+    def listAvailableDirections(self, pos):
+        avail = []
+        directions = ["n", "e", "s", "w"]
+        for direction in directions:
+            if (self.canMove(pos, direction)):
+                avail.append(self.expandDirection(direction))
+        return Util.prettyList(avail, "or")
+
+    def expandDirection(self, direction):
+        if direction == "e":
+            return "east"
+        elif direction == "w":
+            return "west"
+        elif direction == "n":
+            return "north"
+        elif direction == "s":
+            return "south"
+        raise Exception("unknown direction: %s" % direction)
 
     def randomPos(self):
         return Position(random.randint(0, self.size - 1), 
@@ -192,7 +220,7 @@ class Board:
         else:
             sys.stdout.write("Key: #=boulder @=player ^=north &=monster *=item\n")
             for m in self.monsters:
-                print "%s at %s" % (m.name, m.pos)
+                print "%s at %s (aggression %d)" % (m.name, m.pos, m.aggression)
             for i in self.items:
                 print "%s at %s" % (i.name, i.pos)
         print
