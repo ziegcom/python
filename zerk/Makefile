@@ -1,5 +1,5 @@
 all:
-	@echo "This is Python...nothing much to do here."
+	@python main.py
 
 clean:
 	@rm *.pyc

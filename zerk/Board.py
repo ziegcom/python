@@ -3,6 +3,7 @@ from Position import Position
 import sys
 import random
 from random import shuffle
+from termcolor import colored
 
 class Board:
     """
@@ -75,23 +76,31 @@ class Board:
         # wandering monsters wander
         for m in self.monsters:
 
-            # how many spaces this monster can move per turn
-            moves = m.speed 
+            if not m.alive:
+                continue;
 
-            for move in range(0, moves):
+            origPos = m.pos
+
+            # how many spaces this monster can move per turn
+            for move in range(0, m.speed):
                 
                 # the more aggressive a monster is, the more it will try to move toward the player
-                maxChecks = m.aggression
                 dist = m.pos.dist(self.player.pos)
 
                 # consider up to 'aggression' possible moves from this spot, 
                 # looking for one that will move toward the hapless player
-                for check in range (0, maxChecks):
+                for check in range (0, m.aggression):
                     newPos = self.randomAdjacentUnoccupiedPos(m.pos)
                     if newPos is not None:
-                        if (newPos.dist(self.player.pos) < dist) or (check == maxChecks):
+                        if (newPos.dist(self.player.pos) < dist) or (check == m.aggression):
                             m.pos = newPos
                             break
+            
+            # increase entropy when Baby is stuck in a corner
+            if origPos == m.pos:
+                m.aggression -= 1
+            else:
+                m.aggression = min(m.origAggression, m.aggression + 1)
 
     ############################################################################
     #                                                                          #
@@ -126,8 +135,8 @@ class Board:
         # raise Exception("there are no adjacent unoccupied positions from %s" % pos)
 
     def randomPos(self):
-        return Position(random.randint(0, self.size), 
-                        random.randint(0, self.size))
+        return Position(random.randint(0, self.size - 1), 
+                        random.randint(0, self.size - 1))
 
     def canMove(self, pos, direction):
         if pos is None:
@@ -167,13 +176,26 @@ class Board:
         self.dump(label="Breadcrumbs")
 
     def dump(self, **kwargs):
+        # label
         if 'label' in kwargs:
             print "%s:" % kwargs['label']
 
+        # map
         for y in range(0, self.size):
             for x in range(0, self.size):
                 sys.stdout.write(self.getDisplayChar(Position(x, y), **kwargs) + ' ')
             sys.stdout.write('\n')
+
+        # key
+        if not 'admin' in kwargs:
+            sys.stdout.write("Key: #=boulder @=player ^=north\n")
+        else:
+            sys.stdout.write("Key: #=boulder @=player ^=north &=monster *=item\n")
+            for m in self.monsters:
+                print "%s at %s" % (m.name, m.pos)
+            for i in self.items:
+                print "%s at %s" % (i.name, i.pos)
+        print
 
     def getDisplayChar(self, pos, **kwargs):
         if pos in self.obstacles:
@@ -183,17 +205,17 @@ class Board:
         if 'admin' in kwargs:
             for m in self.monsters:
                 if pos == m.pos:
-                    return m.char if hasattr(m, 'char') else '&'
+                    return colored(m.char if hasattr(m, 'char') else '&', 'red')
 
             for i in self.items:
                 if pos == i.pos:
-                    return i.char if hasattr(i, 'char') else '*'
+                    return colored(i.char if hasattr(i, 'char') else '*', 'yellow')
                 
         if self.player is not None:
             if pos == self.player.pos:
-                return self.player.char if hasattr(self.player, 'char') else '@'
+                return colored(self.player.char if hasattr(self.player, 'char') else '@', 'cyan')
 
         if pos in self.trail:
-            return 'o'
+            return colored('o', 'blue')
 
-        return '.'
+        return colored('.', 'green')
