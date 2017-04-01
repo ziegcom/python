@@ -4,8 +4,13 @@ import Monster
 
 import re
 
+try: 
+    input = raw_input
+except NameError: 
+    pass
+
 class Engine:
-    
+
     def __init__(self, board, player):
         self.board = board
         self.player = player
@@ -21,10 +26,17 @@ class Engine:
             self.proximityCheck()
 
             if not self.gameOver:
-                cmd = raw_input("What would you like to do? ")
+                cmd = input("What would you like to do? ")
                 self.processCommand(cmd.lower())
 
     def processCommand(self, cmd):
+
+        # inventory (do this first, before parsing off leading "I")
+        if re.search("inventory", cmd) or cmd == "i":
+            return self.doInventory()
+
+        # peel-off implicit subject
+        cmd = re.sub(r"^i\s+(.*)\s*$", r"\1", cmd)
 
         # help
         if re.search("help", cmd):
@@ -45,10 +57,6 @@ class Engine:
         if result:
             itemName = result.group(3)
             return self.doTake(itemName)
-
-        # inventory
-        if re.search("inventory", cmd) or cmd == "i":
-            return self.doInventory()
 
         # map
         if re.search("map", cmd):
@@ -83,7 +91,7 @@ class Engine:
                 if monster.pos == self.player.pos:
                     print(monster.loseMsg)
                     return self.endGame("You have died.")
-                
+
                 # emit spookiness
                 dist = self.player.pos.dist(monster.pos)
                 if dist <= 1.5:
@@ -92,7 +100,7 @@ class Engine:
                     print(monster.medMsg)
                 elif dist < 3.5:
                     print(monster.farMsg)
-                
+
     def endGame(self, msg):
         # add points for anything in their inventory
         for item in self.player.inventory:
@@ -158,7 +166,7 @@ class Engine:
             if re.search(item.pattern, itemName):
                 self.board.removeItem(item)
                 self.player.addItem(item)
-                print item.takeMsg 
+                print(item.takeMsg)
                 found = True
 
         if not found:
@@ -182,7 +190,7 @@ class Engine:
             self.board.showTrail()
 
     def doSleep(self):
-        print(random.choice(["Time passes...", 
+        print(random.choice(["Time passes...",
                              "You pause to contemplate the cruel impermanence of human existence.",
                              "Espying a passably pillow-shaped rock, you settle down for an impromptu siesta."]))
 

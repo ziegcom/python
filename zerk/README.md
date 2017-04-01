@@ -5,8 +5,8 @@ This was thrown together as an excuse to learn about Python classes and regex.  
 # Version History
 
 - 2017-03-31
-    - made color optional
-    - general tweaks
+    - supports Py2.6/2.7/3.x
+    - general improvements
 
 - 2017-03-30 
     - first runnable version
@@ -34,9 +34,10 @@ This was thrown together as an excuse to learn about Python classes and regex.  
 
 ## Complete
 
-- ~~Killing Thessalhydra makes you the monster?~~
-- ~~Monsters stupidly box themselves into corner~~
-- ~~Occasionally monsters don't appear on initial debug screen~~
+- ~~implicit subject~~
+- ~~killing Thessalhydra makes you the monster?~~
+- ~~monsters stupidly box themselves into corner~~
+- ~~occasionally monsters don't appear on initial debug screen~~
 - ~~colorize map~~
 - ~~add more monsters / items~~
 - ~~add wait/sleep~~

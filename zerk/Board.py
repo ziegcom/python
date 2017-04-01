@@ -93,11 +93,11 @@ class Board:
 
             # how many spaces this monster can move per turn
             for move in range(0, m.speed):
-                
+
                 # the more aggressive a monster is, the more it will try to move toward the player
                 dist = m.pos.dist(self.player.pos)
 
-                # consider up to 'aggression' possible moves from this spot, 
+                # consider up to 'aggression' possible moves from this spot,
                 # looking for one that will move toward the hapless player
                 for check in range (m.aggression + 1):
                     newPos = self.randomAdjacentUnoccupiedPos(m.pos)
@@ -105,7 +105,7 @@ class Board:
                         if (newPos.dist(self.player.pos) < dist) or (check >= m.aggression):
                             m.pos = newPos
                             break
-            
+
             # increase entropy when Baby is stuck in a corner
             if origPos == m.pos:
                 m.aggression = max(0, m.aggression - 1)
@@ -163,7 +163,7 @@ class Board:
         raise Exception("unknown direction: %s" % direction)
 
     def randomPos(self):
-        return Position(random.randint(0, self.size - 1), 
+        return Position(random.randint(0, self.size - 1),
                         random.randint(0, self.size - 1))
 
     def canMove(self, pos, direction):
@@ -228,7 +228,7 @@ class Board:
     def getDisplayChar(self, pos, **kwargs):
         if pos in self.obstacles:
             return '#'
-        
+
         # require God-mode to see monsters and items
         if 'admin' in kwargs:
             for m in self.monsters:
@@ -238,7 +238,7 @@ class Board:
             for i in self.items:
                 if pos == i.pos:
                     return colored(i.char if hasattr(i, 'char') else '*', 'yellow')
-                
+
         if self.player is not None:
             if pos == self.player.pos:
                 return colored(self.player.char if hasattr(self.player, 'char') else '@', 'cyan')
