@@ -23,6 +23,9 @@ This was thrown together as an excuse to learn about Python classes and regex.  
 - needs "kill monster with the tool"
 - needs a goal / exit-condition
 - serialize world parameters out of main() into world.json
+- flying/climbing monsters should be able to pass rubble
+- needs combat system (hit points, hit dice, equipping weapons etc)
+- player should have weight limit
 
 ## 2.0
 

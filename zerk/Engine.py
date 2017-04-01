@@ -69,7 +69,7 @@ class Engine:
         # todo: drop/discard, attack/kill/slay, open, use, ...
 
         # otherwise
-        print "I don't know how to %s.\n" % cmd
+        print("I don't know how to %s.\n" % cmd)
 
         self.confusion += 1
         if self.confusion > 2:
@@ -81,25 +81,25 @@ class Engine:
             if monster.alive:
                 # did the monster just get us?
                 if monster.pos == self.player.pos:
-                    print monster.loseMsg if hasattr(monster, 'loseMsg') else "You have been devoured by a %s." % monster.name
+                    print(monster.loseMsg)
                     return self.endGame("You have died.")
                 
                 # emit spookiness
                 dist = self.player.pos.dist(monster.pos)
                 if dist <= 1.5:
-                    print monster.nearMsg if hasattr(monster, 'nearMsg') else "You hear a loud clatter and gag on a strong stench in the air!"
+                    print(monster.nearMsg)
                 elif dist < 2.5:
-                    print monster.medMsg if hasattr(monster, 'medMsg') else "You hear a scuttling nearby and the faint scraping of claws."
+                    print(monster.medMsg)
                 elif dist < 3.5:
-                    print monster.farMsg if hasattr(monster, 'farMsg') else "You hear a far-off howling in the darkness."
+                    print(monster.farMsg)
                 
     def endGame(self, msg):
         # add points for anything in their inventory
         for item in self.player.inventory:
             self.player.score += item.scoreValue
 
-        print '\n' + msg
-        print "You have a score of %d points." % self.player.score
+        print('\n' + msg)
+        print("You have a score of %d points." % self.player.score)
         self.gameOver = True
 
     ############################################################################
@@ -109,7 +109,7 @@ class Engine:
     ############################################################################
 
     def doWelcome(self):
-        print "Welcome to Zerk, the command-line adventure game of your dreams!\n"
+        print("Welcome to Zerk, the command-line adventure game of your dreams!\n")
 
     def doLook(self):
         print("You are in a vast underground cavern, whose broken landscape is fractured "
@@ -120,37 +120,37 @@ class Engine:
               "From the slowly-cooling pile of damp excreta in which you just stepped, "
               "you take it that you are not alone in this inpenetrable and sound-devouring "
               "darkness.\n")
-        print ("You can go %s.\n" % self.board.listAvailableDirections(self.player.pos))
+        print("You can go %s.\n" % self.board.listAvailableDirections(self.player.pos))
 
     def doMove(self, direction):
         pos = self.player.pos
         longDir = self.board.expandDirection(direction)
 
         if not self.board.canMove(pos, direction):
-            print "The cavern wall prevents you from moving %s." % longDir
+            print("The cavern wall prevents you from moving %s." % longDir)
             return
 
         p2 = self.board.adjacentPos(pos, direction)
         if self.board.occupied(p2):
-            print "You cannot move %s due to a towering mass of unscalable rubble." % longDir
+            print("You cannot move %s due to a towering mass of unscalable rubble." % longDir)
             return
 
-        print "You travel %s." % longDir
+        print("You travel %s." % longDir)
         self.player.pos = p2
 
         # any monsters here?
         for monster in self.board.getMonsters():
             if monster.pos == self.player.pos:
                 if monster.alive:
-                    print monster.winMsg if hasattr(monster, 'winMsg') else "You have defeated the %s!" % monster.name
+                    print(monster.winMsg)
                     self.player.score += monster.scoreValue
                     monster.alive = False
                 else:
-                    print monster.corpseMsg if hasattr(monster, 'corpseMsg') else "You see the corpse of a %s." % monster.name
+                    print(monster.corpseMsg)
 
         # any items here?
         for item in self.board.getItems(self.player.pos):
-            print item.lookMsg if hasattr(item, 'lookMsg') else "You see a %s." % item.name
+            print(item.lookMsg)
 
     def doTake(self, itemName):
         found = False
@@ -158,11 +158,11 @@ class Engine:
             if re.search(item.pattern, itemName):
                 self.board.removeItem(item)
                 self.player.addItem(item)
-                print item.takeMsg if hasattr(item, 'takeMsg') else "You gingerly pick up the %s and place it lovely into your satchel." % item.name
+                print item.takeMsg 
                 found = True
 
         if not found:
-            print "You don't see a %s here." % itemName
+            print("You don't see a %s here." % itemName)
 
     def doInventory(self):
         items = self.player.inventory
@@ -170,23 +170,24 @@ class Engine:
             print("You have nothing in your satchel. Not a stich, not a squib. "
                   "A passing mouse scorns you in ill-disguised contempt.")
         else:
-            print "Rooting through your battered satchel, you see:"
+            print("Rooting through your battered satchel, you see:")
             for item in items:
-                print "  %s" % item.name
+                print("  %s" % item.name)
 
     def doMap(self):
+        # TODO: consider ways to implement engine-modifying callbacks / overrides for magic items
         if self.player.hasItemName("Key of Admin"):
             self.board.dump(label="Administrator Map", admin=True)
         else:
             self.board.showTrail()
 
     def doSleep(self):
-        print random.choice(["Time passes...", 
+        print(random.choice(["Time passes...", 
                              "You pause to contemplate the cruel impermanence of human existence.",
-                             "Espying a passably pillow-shaped rock, you settle down for an impromptu siesta."])
+                             "Espying a passably pillow-shaped rock, you settle down for an impromptu siesta."]))
 
     def doHelp(self):
-        print("I am but a feeble Python AI, but I understand a few basic constructs.\n"
+        print("I am but a feeble regex tree masquerading as an AI, but I understand a few basic constructs.\n\n"
               "Examples:\n"
               "  go north (or just 'n')\n"
               "  look\n"
@@ -196,10 +197,3 @@ class Engine:
 
     def doDebug(self):
         self.board.dump(label="Sekret Map (U no see!)", admin=True)
-
-    ############################################################################
-    #                                                                          #
-    #                             Utility Methods                              #
-    #                                                                          #
-    ############################################################################
-

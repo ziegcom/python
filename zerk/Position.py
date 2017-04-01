@@ -13,7 +13,7 @@ class Position:
         return self.__dict__ == other.__dict__
 
     def __hash__(self):
-        return hash(str(self))
+        return self.x << 8 | self.y
 
     def dist(self, pos):
         return math.sqrt((self.x - pos.x) * (self.x - pos.x) +

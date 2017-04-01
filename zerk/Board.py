@@ -206,7 +206,7 @@ class Board:
     def dump(self, **kwargs):
         # label
         if 'label' in kwargs:
-            print "%s:" % kwargs['label']
+            print("%s:" % kwargs['label'])
 
         # map
         for y in range(0, self.size):
@@ -220,10 +220,10 @@ class Board:
         else:
             sys.stdout.write("Key: #=boulder @=player ^=north &=monster *=item\n")
             for m in self.monsters:
-                print "%s at %s (aggression %d)" % (m.name, m.pos, m.aggression)
+                print("%s at %s (aggression %d)" % (m.name, m.pos, m.aggression))
             for i in self.items:
-                print "%s at %s" % (i.name, i.pos)
-        print
+                print("%s at %s" % (i.name, i.pos))
+        print("")
 
     def getDisplayChar(self, pos, **kwargs):
         if pos in self.obstacles:

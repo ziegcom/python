@@ -8,12 +8,12 @@ from Engine  import Engine
 
 import sys
 
-def main():
+def main(argv):
     # instantiate a square board
     board = Board(30)
 
     # scatter some random obstacles about the board    
-    board.createObstacles(10, 10)
+    board.createObstacles(15, 20)
 
     # instantiate a monster
     m1 = Monster(speed = 2,
@@ -97,4 +97,5 @@ def main():
     engine = Engine(board, player)
     engine.start()
 
-sys.exit(main())
+if __name__ == "__main__":
+    main(sys.argv)
