@@ -1,8 +1,8 @@
 class Monster:
 
-    def __init__(self, **kwargs):
+    def __init__(self, name, **kwargs):
         # defaults
-        self.name       = "grue"
+        self.name       = name
         self.pos        = None
         self.alive      = True
         self.aggression = 0

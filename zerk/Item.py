@@ -1,7 +1,8 @@
 class Item:
 
-    def __init__(self, **kwargs):
+    def __init__(self, name, **kwargs):
         # defaults
+        self.name = name
         self.pos = None
         self.scoreValue = 20
 

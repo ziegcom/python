@@ -16,11 +16,11 @@ def main(argv):
     board.createObstacles(15, 20)
 
     # instantiate a monster
-    m1 = Monster(speed = 2,
+    m1 = Monster("Thessalhydra",
+                 speed = 2,
                  char = "T",
                  aggression = 2,
                  scoreValue = 1000,
-                 name = "Thessalhydra",
                  farMsg  = "You hear the clanking of distant chains.",
                  medMsg  = "You hear the rattle of a dragged chain and sense a fouling of the air.",
                  nearMsg = "You hear a sudden loud clangor and gag on a horrid gangrene stench.",
@@ -32,14 +32,14 @@ def main(argv):
                            "howls in gluttonous victory and then proceeds to lap at your still-steaming "
                            "entrails.")
 
-    m2 = Monster(name = "mouse", 
+    m2 = Monster("mouse", 
                  char = "m",
                  aggression = 1,
                  nearMsg = "You hear a squeaking down near the ground.", 
                  winMsg  = "You clumsily step on the mouse's tail, causing it to stiffen in fright and feign death until you go away.",
                  scoreValue = 2)
 
-    m3 = Monster(name = "Cave-Bat", 
+    m3 = Monster("Cave-Bat", 
                  char = "C",
                  aggression = 1,
                  speed   = 3,
@@ -55,7 +55,7 @@ def main(argv):
     board.addMonster(m3)
 
     # place items on the board
-    thing1 = Item(name       = "Key of Admin",
+    thing1 = Item("Key of Admin",
                   pattern    = "key",
                   weight     = 5,
                   cost       = 500,
@@ -64,7 +64,7 @@ def main(argv):
                                "nimbus of power, lying forelorn on the dusty cavern floor.",
                   takeMsg    = "You hold aloft the mighty Key of Admin, and feel a shiver of power ripple "
                                "down your arm.  Suddenly you feel an enhanced awareness of your surroundings.")
-    thing2 = Item(name = "suspicious fungus",
+    thing2 = Item("suspicious fungus",
                   pattern = "fungus|fungi|fungoid|lichen",
                   weight = 2,
                   cost = 5,
@@ -72,7 +72,7 @@ def main(argv):
                   lookMsg = "You see a suspicious-looking fungus growing on the rocks nearby.",
                   takeMsg = "Heaven knows what you plan to do with it, but you carefully nestle the mottled fungoid into your bag.")
 
-    thing3 = Item(name = "rock resembling Donald Trump's hairpiece",
+    thing3 = Item("rock resembling Donald Trump's hairpiece",
                   pattern = "rock|stone|trump|hair|toupee",
                   weight = 10,
                   cost = 1,
