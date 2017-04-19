@@ -3,12 +3,21 @@ import Player
 import Monster
 
 import re
+import random
 
+################################################################################
+#                                                                              #
+#                          Compatibility Kludges                               #
+#                                                                              #
+################################################################################
+
+# in 2.x, map raw_input() to 3.x's newer input()
 try: 
     input = raw_input
 except NameError: 
     pass
 
+################################################################################
 class Engine:
 
     def __init__(self, board, player):
@@ -53,7 +62,7 @@ class Engine:
             return self.doMove(direction)
 
         # take
-        result = re.match(r"(take|get|grab|steal|filch|acquire|obtain|pick.*up)\s+(the|a|an\s+)?(\S+)", cmd)
+        result = re.match(r"(take|get|grab|steal|filch|acquire|obtain|pick.*up)\s+(the|an?)?\s*(\S+)", cmd)
         if result:
             itemName = result.group(3)
             return self.doTake(itemName)
@@ -63,7 +72,7 @@ class Engine:
             return self.doMap()
 
         # wait
-        if re.search(r"wait|sleep|pause|delay", cmd):
+        if re.search(r"wait|sleep|pause|delay|nap", cmd):
             return self.doSleep()
 
         # debug
@@ -71,7 +80,7 @@ class Engine:
             return self.doDebug()
 
         # quit
-        if re.search(r"quit|stop|kill (me|self|myself)", cmd):
+        if re.search(r"quit|stop|end|exit|kill (me|self|myself)|shuffle off this mortal coil|self.*defenestrate", cmd):
             return self.endGame("You're a complete wuss. A waste of space. I've pushed out farts with more conviction than you.")
 
         # todo: drop/discard, attack/kill/slay, open, use, ...
@@ -149,6 +158,8 @@ class Engine:
         # any monsters here?
         for monster in self.board.getMonsters():
             if monster.pos == self.player.pos:
+                # until we implement combat logic, follow chess rules: if we move into
+                # the monster's space, we win
                 if monster.alive:
                     print(monster.winMsg)
                     self.player.score += monster.scoreValue
@@ -162,6 +173,8 @@ class Engine:
 
     def doTake(self, itemName):
         found = False
+
+        # pick up any items at this location matching the given name
         for item in self.board.getItems(self.player.pos):
             if re.search(item.pattern, itemName):
                 self.board.removeItem(item)
@@ -175,7 +188,7 @@ class Engine:
     def doInventory(self):
         items = self.player.inventory
         if len(items) == 0:
-            print("You have nothing in your satchel. Not a stich, not a squib. "
+            print("You have nothing in your satchel. Not a stitch, not a squib. "
                   "A passing mouse scorns you in ill-disguised contempt.")
         else:
             print("Rooting through your battered satchel, you see:")

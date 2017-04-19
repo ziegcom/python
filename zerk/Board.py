@@ -6,9 +6,12 @@ import random
 from random import shuffle
 
 ################################################################################
-# Version compatibility BS
+#                                                                              #
+#                          Compatibility Kludges                               #
+#                                                                              #
 ################################################################################
 
+# if localhost doesn't have termcolor installed, define a simple pass-through
 try:
     from termcolor import colored
 except ImportError:

@@ -1,7 +1,12 @@
-# you can tell I come from C++
+# you can tell I come from C
 
-all:
+debug:
+	@# runs with __debug__ 
 	@python main.py
+
+release:
+	@# runs without __debug__ 
+	@python -O main.py
 
 clean:
 	@rm -f *.pyc *.pyo
