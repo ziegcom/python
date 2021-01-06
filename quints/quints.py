@@ -115,6 +115,7 @@ class QuintProcessor(object):
 
             # Associate this filename with a quint (either an existing one, or
             # a new one).
+            quint_key = None
 
             # check if we've ever seen this sequence before
             if not parsed.seq in self.seqs:
