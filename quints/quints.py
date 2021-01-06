@@ -4,6 +4,12 @@ import sys
 
 from datetime import datetime
 
+################################################################################
+#                                                                              #
+#                                  Classes                                     #
+#                                                                              #
+################################################################################
+
 ##
 # Represents a fully assembled Quint.  Has a copy of its own key (presumably the
 # lowest timestamp and seq) for tracking.  If valid(), should have size() == 5.
@@ -83,6 +89,12 @@ class ParsedFilename(object):
     ## convenience for debugging
     def __str__(self):
         return "[ParsedFilename: cam %s, seq %d, timestamp %s]" % (self.camera, self.seq, self.timestamp)
+
+################################################################################
+#                                                                              #
+#                           QuintProcessor Application                         #
+#                                                                              #
+################################################################################
 
 class QuintProcessor(object):
 
@@ -169,6 +181,11 @@ class QuintProcessor(object):
         for filename in quint.filenames:
             print("  processing file %s" % filename)
 
+################################################################################
+#                                                                              #
+#                                  main()                                      #
+#                                                                              #
+################################################################################
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:
