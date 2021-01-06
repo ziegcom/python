@@ -122,7 +122,7 @@ class QuintProcessor(object):
                 # Make the new quint key and register it under the sequence.
                 quint_key = QuintKey(parsed)
                 self.seqs[parsed.seq] = [ quint_key ]
-                print("first time seeing seq %d, created new quint %s" % (parsed.seq, str(quint_key)))
+                print("first time seeing seq %d, created new quint_key %s" % (parsed.seq, str(quint_key)))
             else:
                 # We have seen this sequence before.  Check if this filename
                 # should belong to an existing quint.
@@ -133,9 +133,9 @@ class QuintProcessor(object):
                     # it to the current sequence.
                     quint_key = QuintKey(parsed)
                     self.seqs[parsed.seq].append(quint_key)
-                    print("starting new quint %s under repeat seq %d" % (quint_key, parsed.seq))
+                    print("starting new quint_key %s under repeat seq %d" % (quint_key, parsed.seq))
                 else:
-                    print("matched parsed file to existing quint %s" % str(quint_key))
+                    print("matched parsed file to existing quint_key %s" % str(quint_key))
 
             # at this point we should definitely have a quint_key
             if not quint_key:
@@ -144,12 +144,14 @@ class QuintProcessor(object):
             # either create or grab the quint for this key
             if quint_key in self.quints:
                 quint = self.quints[quint_key]
+                print("using existing Quint %s" % str(quint))
             else:
                 quint = Quint(quint_key)
-                print("made new Quint from key %s" % str(quint_key))
+                print("creating new Quint %s" % str(quint))
 
             # add this file to the quint
             quint.add(filename)
+            print("added to Quint %s: %s" % (str(quint), filename))
                 
     def find_quint_key(self, parsed_filename):
         seq = parsed_filename.seq
