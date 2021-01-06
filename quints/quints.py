@@ -100,7 +100,7 @@ class QuintProcessor(object):
 
     def __init__(self):
         self.seqs = {}          # a map of seq to array of QuintKeys using that seq, ex: { 123 -> [ QuintKeyA, QuintKeyB ], 124 -> [ QuintKeyC ] }
-        self.quints = {}        # a map of all QuintKeys
+        self.quints = {}        # a map of all QuintKeys to their respective Quints
 
     def load(self, pathname):
         # generate the list of filenames
