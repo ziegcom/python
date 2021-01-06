@@ -133,7 +133,7 @@ class QuintProcessor(object):
                     # it to the current sequence.
                     quint_key = QuintKey(parsed)
                     self.seqs[parsed.seq].append(quint_key)
-                    print("starting new quint_key %s under repeat seq %d" % (quint_key, parsed.seq))
+                    print("starting new quint_key %s under repeat seq %d" % (str(quint_key), parsed.seq))
                 else:
                     print("matched parsed file to existing quint_key %s" % str(quint_key))
 
